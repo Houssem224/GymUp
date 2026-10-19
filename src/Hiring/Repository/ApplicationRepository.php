@@ -1,0 +1,9 @@
+﻿<?php
+
+namespace App\Hiring\Repository;
+
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+
+class ApplicationRepository extends ServiceEntityRepository
+{
+}
