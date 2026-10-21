@@ -1,0 +1,44 @@
+# Symfony
+/.env
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+/build/
+/phpunit.xml
+/.phpunit.result.cache
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Composer
+composer.lock
+
+# Node
+/node_modules/
+/npm-debug.log
+/yarn-error.log
+
+# Uploads
+/public/uploads/
+
+# Logs
+*.log
+
+# Cache
+/cache/
+
+# Temporary files
+*.tmp
+*.temp
