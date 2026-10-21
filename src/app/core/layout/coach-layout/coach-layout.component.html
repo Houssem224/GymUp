@@ -1,0 +1,19 @@
+﻿<div class="coach-layout">
+  <header class="navbar">
+    <div class="navbar-brand">
+      <h1>GymUp</h1>
+    </div>
+    <div class="navbar-nav">
+      <span class="user-name">{{ userName }}</span>
+      <button (click)="logout()" class="btn btn-danger">Logout</button>
+    </div>
+  </header>
+
+  <nav class="coach-nav">
+    <a routerLink="/coach/schedule" routerLinkActive="active">My Schedule</a>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

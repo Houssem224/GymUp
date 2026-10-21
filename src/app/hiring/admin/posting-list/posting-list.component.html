@@ -1,0 +1,142 @@
+<div class="posting-admin-page">
+  <div class="page-header">
+    <div class="header-left">
+      <span class="admin-badge">TALENT ACQUISITION</span>
+      <h1>Job Postings & Recruitment Campaigns</h1>
+      <p>Manage open positions, monitor applicant volumes, and launch new hiring drives.</p>
+    </div>
+
+    <div class="header-right">
+      <button type="button" class="btn-create" (click)="openCreateModal()">
+        + Launch New Job Posting
+      </button>
+    </div>
+  </div>
+
+  <div class="feedback-banner" *ngIf="feedbackMessage">
+    ✓ {{ feedbackMessage }}
+  </div>
+
+  <!-- Postings Cards Grid -->
+  <div class="postings-grid">
+    <div class="posting-admin-card" *ngFor="let p of postings">
+      <div class="card-top">
+        <div class="role-group">
+          <span
+            class="pos-tag"
+            [class.coach]="p.positionType === 'COACH'"
+            [class.reception]="p.positionType === 'RECEPTIONIST'"
+          >
+            {{ p.positionType }}
+          </span>
+          <span class="posting-num">#POST-{{ p.id }}</span>
+        </div>
+
+        <span
+          class="status-chip"
+          [class.open]="p.status === 'OPEN'"
+          [class.closed]="p.status === 'CLOSED'"
+        >
+          ● {{ p.status }}
+        </span>
+      </div>
+
+      <h3 class="role-title">
+        {{ p.positionType === 'COACH' ? 'Fitness Coach & Personal Trainer' : 'Front Desk Host & Receptionist' }}
+      </h3>
+
+      <div class="metrics-row">
+        <div class="metric-box">
+          <span class="m-val">{{ p.applicationCount || 0 }}</span>
+          <span class="m-lbl">Applicants</span>
+        </div>
+        <div class="metric-box">
+          <span class="m-val">{{ p.openedAt | date:'mediumDate' }}</span>
+          <span class="m-lbl">Date Opened</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button
+          type="button"
+          class="btn-view-apps"
+          (click)="goToApplications(p)"
+        >
+          View Applications ({{ p.applicationCount || 0 }}) →
+        </button>
+
+        <button
+          *ngIf="p.status === 'OPEN'"
+          type="button"
+          class="btn-close-post"
+          (click)="closePosting(p)"
+        >
+          Close Posting
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Job Posting Modal -->
+  <div class="modal-backdrop" *ngIf="showCreateModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Launch New Job Opening</h3>
+        <button type="button" class="btn-close-x" (click)="closeCreateModal()">✕</button>
+      </div>
+
+      <p class="modal-subtitle">
+        Select the role category to publish to the public careers page.
+      </p>
+
+      <div class="role-selector">
+        <label
+          class="role-option"
+          [class.selected]="newPositionType === 'COACH'"
+          (click)="newPositionType = 'COACH'"
+        >
+          <div class="role-icon">🏋️</div>
+          <div class="role-text">
+            <strong>Fitness Coach</strong>
+            <small>Group workouts, personal training, strength coaching</small>
+          </div>
+          <input
+            type="radio"
+            name="roleOpt"
+            [checked]="newPositionType === 'COACH'"
+          />
+        </label>
+
+        <label
+          class="role-option"
+          [class.selected]="newPositionType === 'RECEPTIONIST'"
+          (click)="newPositionType = 'RECEPTIONIST'"
+        >
+          <div class="role-icon">👋</div>
+          <div class="role-text">
+            <strong>Receptionist / Front Desk</strong>
+            <small>Member hospitality, walk-in cash intake, access desk</small>
+          </div>
+          <input
+            type="radio"
+            name="roleOpt"
+            [checked]="newPositionType === 'RECEPTIONIST'"
+          />
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" (click)="closeCreateModal()">Cancel</button>
+        <button
+          type="button"
+          class="btn-confirm"
+          [disabled]="isCreating"
+          (click)="submitCreatePosting()"
+        >
+          <span *ngIf="!isCreating">Publish Job Posting Now</span>
+          <span *ngIf="isCreating">Publishing...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

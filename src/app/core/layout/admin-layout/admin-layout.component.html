@@ -1,0 +1,40 @@
+﻿<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1>GymUp</h1>
+      <p class="user-name">{{ userName }}</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active">
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/admin/plans" routerLinkActive="active">
+        <span>Membership Plans</span>
+      </a>
+      <a routerLink="/admin/classes" routerLinkActive="active">
+        <span>Classes</span>
+      </a>
+      <a routerLink="/admin/hiring" routerLinkActive="active">
+        <span>Job Postings</span>
+      </a>
+      <a routerLink="/admin/applications" routerLinkActive="active">
+        <span>Applications</span>
+      </a>
+      <a routerLink="/admin/revenue" routerLinkActive="active">
+        <span>Revenue</span>
+      </a>
+      <a routerLink="/admin/streaks" routerLinkActive="active">
+        <span>Streak Leaderboard</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="btn btn-danger btn-block">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

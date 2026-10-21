@@ -1,0 +1,25 @@
+﻿<div class="member-layout">
+  <header class="navbar">
+    <div class="navbar-brand">
+      <h1>GymUp</h1>
+    </div>
+    <div class="navbar-nav">
+      <span class="user-name">{{ userName }}</span>
+      <button (click)="logout()" class="btn btn-danger">Logout</button>
+    </div>
+  </header>
+
+  <nav class="member-nav">
+    <a routerLink="/member/subscription" routerLinkActive="active">My Subscription</a>
+    <a routerLink="/member/plans" routerLinkActive="active">Browse Plans</a>
+    <a routerLink="/member/classes" routerLinkActive="active">Class Schedule</a>
+    <a routerLink="/member/bookings" routerLinkActive="active">My Bookings</a>
+    <a routerLink="/member/checkin" routerLinkActive="active">QR Check-in</a>
+    <a routerLink="/member/schedule" routerLinkActive="active">Weekly Schedule</a>
+    <a routerLink="/member/streak" routerLinkActive="active">My Streak</a>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

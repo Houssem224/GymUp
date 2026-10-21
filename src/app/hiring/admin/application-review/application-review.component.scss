@@ -1,0 +1,316 @@
+.review-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+
+    .admin-badge {
+      background: #eff6ff;
+      color: #2563eb;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      letter-spacing: 0.05em;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.4rem 0;
+    }
+
+    p {
+      color: #64748b;
+      margin: 0;
+    }
+
+    .btn-postings {
+      background: #f1f5f9;
+      color: #334155;
+      text-decoration: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #e2e8f0;
+      }
+    }
+  }
+
+  .action-alert {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #047857;
+    padding: 0.85rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .review-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .status-tabs {
+      display: flex;
+      background: #f1f5f9;
+      padding: 0.25rem;
+      border-radius: 10px;
+
+      button {
+        background: transparent;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #64748b;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &.active {
+          background: white;
+          color: #0f172a;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        &.pending.active {
+          color: #d97706;
+        }
+
+        &.accepted.active {
+          color: #059669;
+        }
+
+        &.rejected.active {
+          color: #dc2626;
+        }
+      }
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: white;
+      border: 1px solid #cbd5e1;
+      padding: 0.5rem 0.85rem;
+      border-radius: 8px;
+
+      input {
+        border: none;
+        outline: none;
+        font-size: 0.85rem;
+        color: #0f172a;
+        width: 240px;
+      }
+    }
+  }
+
+  .applications-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .ats-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+
+      th {
+        background: #f8fafc;
+        padding: 0.85rem 1.25rem;
+        color: #64748b;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      td {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+      }
+
+      tr:hover td {
+        background: #f8fafc;
+      }
+
+      .candidate-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+
+        .avatar {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: #e2e8f0;
+          color: #334155;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        strong {
+          display: block;
+          color: #0f172a;
+        }
+
+        small {
+          color: #64748b;
+          font-size: 0.8rem;
+        }
+      }
+
+      .role-pill {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.6rem;
+        border-radius: 6px;
+
+        &.coach {
+          background: #fef3c7;
+          color: #b45309;
+        }
+
+        &.reception {
+          background: #dbeafe;
+          color: #1d4ed8;
+        }
+      }
+
+      .cv-link {
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .date-cell {
+        span {
+          display: block;
+          color: #1e293b;
+          font-size: 0.85rem;
+        }
+
+        small {
+          color: #94a3b8;
+          font-size: 0.75rem;
+        }
+      }
+
+      .status-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 0.2rem 0.6rem;
+        border-radius: 9999px;
+
+        &.pending {
+          background: #fef3c7;
+          color: #b45309;
+        }
+
+        &.accepted {
+          background: #ecfdf5;
+          color: #047857;
+        }
+
+        &.rejected {
+          background: #fef2f2;
+          color: #b91c1c;
+        }
+      }
+
+      .actions-group {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+
+        .btn-accept {
+          background: #059669;
+          color: white;
+          border: none;
+          padding: 0.45rem 0.85rem;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+
+          &:hover:not(:disabled) {
+            background: #047857;
+          }
+        }
+
+        .btn-reject {
+          background: transparent;
+          border: 1px solid #fca5a5;
+          color: #b91c1c;
+          padding: 0.45rem 0.75rem;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          cursor: pointer;
+
+          &:hover:not(:disabled) {
+            background: #fef2f2;
+          }
+        }
+
+        .hire-confirmed {
+          color: #059669;
+          font-weight: 600;
+          font-size: 0.85rem;
+        }
+
+        .declined-text {
+          color: #94a3b8;
+          font-size: 0.85rem;
+        }
+      }
+
+      .empty-cell {
+        text-align: center;
+        padding: 3rem;
+        color: #94a3b8;
+        font-style: italic;
+      }
+    }
+  }
+}

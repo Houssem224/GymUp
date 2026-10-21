@@ -1,0 +1,49 @@
+﻿<div class="plan-list">
+  <div class="page-header">
+    <h1>Membership Plans</h1>
+    <button (click)="createPlan()" class="btn btn-primary">Create New Plan</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading plans...</div>
+
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+  <div *ngIf="!loading && plans.length === 0" class="no-data">
+    No plans found. Create your first plan.
+  </div>
+
+  <table *ngIf="!loading && plans.length > 0" class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Duration</th>
+        <th>Access Scope</th>
+        <th>Max Members</th>
+        <th>Current Members</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let plan of plans">
+        <td>{{ plan.name }}</td>
+        <td>${{ plan.price.toFixed(2) }}</td>
+        <td>{{ plan.durationDays }} days</td>
+        <td>{{ getAccessScopeLabel(plan.accessScope) }}</td>
+        <td>{{ plan.maxMembers || 'Unlimited' }}</td>
+        <td>{{ plan.currentMembersCount || 0 }}</td>
+        <td>
+          <span class="badge" [ngClass]="plan.isActive ? 'badge-success' : 'badge-danger'">
+            {{ plan.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+        <td>
+          <button (click)="editPlan(plan.id)" class="btn btn-primary" style="margin-right: 5px;">Edit</button>
+          <button *ngIf="!plan.isActive" (click)="activatePlan(plan.id)" class="btn btn-success" style="margin-right: 5px;">Activate</button>
+          <button *ngIf="plan.isActive" (click)="deactivatePlan(plan.id)" class="btn btn-danger">Deactivate</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

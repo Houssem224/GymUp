@@ -1,0 +1,20 @@
+﻿<div class="receptionist-layout">
+  <header class="navbar">
+    <div class="navbar-brand">
+      <h1>GymUp</h1>
+    </div>
+    <div class="navbar-nav">
+      <span class="user-name">{{ userName }}</span>
+      <button (click)="logout()" class="btn btn-danger">Logout</button>
+    </div>
+  </header>
+
+  <nav class="receptionist-nav">
+    <a routerLink="/receptionist/register" routerLinkActive="active">Walk-in Registration</a>
+    <a routerLink="/receptionist/cash-payment" routerLinkActive="active">Cash Payment</a>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

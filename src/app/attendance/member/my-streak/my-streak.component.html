@@ -1,0 +1,112 @@
+<div class="streak-page">
+  <div class="page-header">
+    <div class="header-left">
+      <span class="badge">MY PERFORMANCE</span>
+      <h1>Attendance & Streak Tracker</h1>
+      <p>Track your workout frequency and maintain consecutive training consistency.</p>
+    </div>
+
+    <div class="header-right">
+      <a routerLink="/attendance/check-in" class="btn-checkin">
+        📷 Scan QR Check-In
+      </a>
+    </div>
+  </div>
+
+  <!-- Giant Fire Hero Banner -->
+  <div class="flame-hero">
+    <div class="flame-animation">
+      <span class="big-flame">🔥</span>
+    </div>
+    <div class="flame-info">
+      <span class="streak-subtitle">CURRENT ACTIVE STREAK</span>
+      <div class="counter-display">
+        <span class="count-number">{{ historyData.currentStreak }}</span>
+        <span class="count-unit">DAYS IN A ROW</span>
+      </div>
+      <div class="streak-badge-pill">
+        {{ streakTier }}
+      </div>
+    </div>
+    <div class="flame-actions">
+      <a routerLink="/attendance/schedule" class="btn-schedule-link">
+        ⚙️ Adjust Weekly Schedule
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">🏋️</div>
+      <div class="stat-details">
+        <span class="stat-label">Total Gym Visits</span>
+        <h3 class="stat-value">{{ historyData.totalAttendances }}</h3>
+        <small class="stat-sub">Lifetime attendance recorded</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">📅</div>
+      <div class="stat-details">
+        <span class="stat-label">Last Successful Visit</span>
+        <h3 class="stat-value">
+          {{ historyData.lastSuccessDate ? (historyData.lastSuccessDate | date:'mediumDate') : 'Today' }}
+        </h3>
+        <small class="stat-sub">Validated via front desk scanner</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">🏆</div>
+      <div class="stat-details">
+        <span class="stat-label">Stored Record Streak</span>
+        <h3 class="stat-value">{{ historyData.storedStreak }} Days</h3>
+        <small class="stat-sub">Personal all-time highest</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Attendance Timeline -->
+  <div class="timeline-card">
+    <div class="timeline-header">
+      <h3>Recent Check-In History</h3>
+      <span class="timeline-count">{{ historyData.history.length }} visits logged</span>
+    </div>
+
+    <div class="history-table-wrapper">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Visit #</th>
+            <th>Check-In Date</th>
+            <th>Scanned Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of historyData.history; let i = index">
+            <td>
+              <span class="visit-index">#{{ historyData.history.length - i }}</span>
+            </td>
+            <td>
+              <strong>{{ item.date | date:'fullDate' }}</strong>
+            </td>
+            <td>
+              <span class="scan-time">{{ item.scannedAt | date:'shortTime' }}</span>
+            </td>
+            <td>
+              <span class="attended-tag">✓ Attended & Validated</span>
+            </td>
+          </tr>
+
+          <tr *ngIf="historyData.history.length === 0 && !isLoading">
+            <td colspan="4" class="empty-cell">
+              No check-ins recorded yet. Head to the gym turnstile and scan your QR code to start!
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

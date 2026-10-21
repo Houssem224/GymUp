@@ -1,0 +1,241 @@
+.schedule-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+
+    .badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.5rem 0;
+    }
+
+    p {
+      color: #64748b;
+      max-width: 650px;
+      margin: 0 auto;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  }
+
+  .schedule-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2.5rem;
+
+    .commitment-bar {
+      margin-bottom: 2rem;
+
+      .bar-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 0.75rem;
+
+        h3 {
+          margin: 0;
+          font-size: 1.4rem;
+          font-weight: 800;
+          color: #0f172a;
+        }
+
+        .commitment-tier {
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: #2563eb;
+        }
+      }
+
+      .meter {
+        height: 10px;
+        background: #f1f5f9;
+        border-radius: 9999px;
+        overflow: hidden;
+
+        .fill {
+          height: 100%;
+          background: linear-gradient(90deg, #3b82f6, #10b981);
+          border-radius: 9999px;
+          transition: width 0.3s ease;
+        }
+      }
+    }
+
+    .days-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+
+      @media (max-width: 768px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      @media (max-width: 480px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .day-btn {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1.25rem 0.5rem;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        transition: all 0.2s;
+        position: relative;
+
+        .day-check {
+          position: absolute;
+          top: 6px;
+          right: 8px;
+          font-size: 0.75rem;
+          color: #2563eb;
+          font-weight: 800;
+        }
+
+        .day-short {
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: #0f172a;
+        }
+
+        .day-full {
+          font-size: 0.75rem;
+          color: #64748b;
+        }
+
+        &:hover {
+          border-color: #94a3b8;
+        }
+
+        &.selected {
+          border-color: #2563eb;
+          background: #eff6ff;
+
+          .day-short {
+            color: #2563eb;
+          }
+
+          .day-full {
+            color: #1d4ed8;
+          }
+        }
+      }
+    }
+
+    .success-banner {
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .error-banner {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .save-row {
+      display: flex;
+      justify-content: flex-end;
+
+      .btn-save {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 0.9rem 2rem;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover:not(:disabled) {
+          background: #1d4ed8;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+
+  .rules-card {
+    background: #0f172a;
+    color: white;
+    border-radius: 20px;
+    padding: 2.25rem;
+
+    h3 {
+      margin: 0 0 1.5rem 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+
+      .rule-box {
+        .rule-icon {
+          font-size: 1.75rem;
+          display: block;
+          margin-bottom: 0.5rem;
+        }
+
+        h4 {
+          margin: 0 0 0.35rem 0;
+          font-size: 1rem;
+          color: #f8fafc;
+        }
+
+        p {
+          margin: 0;
+          font-size: 0.85rem;
+          color: #94a3b8;
+          line-height: 1.5;
+        }
+      }
+    }
+  }
+}

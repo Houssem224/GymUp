@@ -1,0 +1,55 @@
+﻿<div class="dashboard">
+  <h1>Admin Dashboard</h1>
+
+  <div *ngIf="loading" class="loading">Loading dashboard...</div>
+
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+  <div *ngIf="metrics" class="metrics-grid">
+    <div class="metric-card">
+      <h3>Active Members</h3>
+      <p class="metric-value">{{ metrics.activeMembers }}</p>
+      <p class="metric-label">Total: {{ metrics.totalMembers }}</p>
+    </div>
+
+    <div class="metric-card">
+      <h3>Class Occupancy</h3>
+      <p class="metric-value">{{ metrics.classOccupancyRate }}%</p>
+      <p class="metric-label">Average utilization</p>
+    </div>
+
+    <div class="metric-card">
+      <h3>Monthly Revenue</h3>
+      <p class="metric-value">${{ metrics.monthlyRevenue.total.toFixed(2) }}</p>
+      <p class="metric-label">Online: ${{ metrics.monthlyRevenue.online.toFixed(2) }} | Cash: ${{ metrics.monthlyRevenue.cash.toFixed(2) }}</p>
+    </div>
+
+    <div class="metric-card">
+      <h3>Expiring Memberships</h3>
+      <p class="metric-value">{{ metrics.expiringMemberships }}</p>
+      <p class="metric-label">Expiring within 7 days</p>
+    </div>
+  </div>
+
+  <div *ngIf="metrics" class="streak-leaderboard">
+    <h2>Top Streaks</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Member</th>
+          <th>Streak</th>
+          <th>Last Success</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of metrics.topStreaks; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item.memberName }}</td>
+          <td>{{ item.streak }} days</td>
+          <td>{{ item.lastSuccessDate }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

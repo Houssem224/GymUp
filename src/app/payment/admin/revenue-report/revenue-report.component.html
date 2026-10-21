@@ -1,0 +1,202 @@
+<div class="revenue-page">
+  <!-- Header & Date Period Filters -->
+  <div class="page-header">
+    <div class="header-left">
+      <span class="admin-pill">ADMIN FINANCIAL INTELLIGENCE</span>
+      <h1>Revenue & Payment Reports</h1>
+      <p>Analyze income breakdown across online card charges and front-desk cash receipts.</p>
+    </div>
+
+    <div class="header-right">
+      <div class="period-tabs">
+        <button
+          type="button"
+          [class.active]="selectedPeriod === 'month'"
+          (click)="setPeriod('month')"
+        >
+          This Month
+        </button>
+        <button
+          type="button"
+          [class.active]="selectedPeriod === 'quarter'"
+          (click)="setPeriod('quarter')"
+        >
+          Last 90 Days
+        </button>
+        <button
+          type="button"
+          [class.active]="selectedPeriod === 'year'"
+          (click)="setPeriod('year')"
+        >
+          Year to Date
+        </button>
+      </div>
+
+      <button type="button" class="btn-export" (click)="exportCsv()">
+        📥 Export CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- Key Metrics 4-Cards Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card total">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-content">
+        <span class="kpi-label">Total Gym Revenue</span>
+        <h2 class="kpi-val">${{ summary.totalRevenue.toLocaleString() }}</h2>
+        <span class="kpi-sub">{{ summary.totalCount }} total transactions recorded</span>
+      </div>
+    </div>
+
+    <div class="kpi-card online">
+      <div class="kpi-icon">💳</div>
+      <div class="kpi-content">
+        <span class="kpi-label">Online Card Payments</span>
+        <h2 class="kpi-val">${{ summary.onlineRevenue.toLocaleString() }}</h2>
+        <span class="kpi-sub">{{ summary.onlineCount }} transactions ({{ onlinePercent }}% of total)</span>
+      </div>
+    </div>
+
+    <div class="kpi-card cash">
+      <div class="kpi-icon">💵</div>
+      <div class="kpi-content">
+        <span class="kpi-label">Front Desk Cash</span>
+        <h2 class="kpi-val">${{ summary.cashRevenue.toLocaleString() }}</h2>
+        <span class="kpi-sub">{{ summary.cashCount }} transactions ({{ cashPercent }}% of total)</span>
+      </div>
+    </div>
+
+    <div class="kpi-card avg">
+      <div class="kpi-icon">📈</div>
+      <div class="kpi-content">
+        <span class="kpi-label">Avg Transaction Value</span>
+        <h2 class="kpi-val">
+          ${{ summary.totalCount ? (summary.totalRevenue / summary.totalCount).toFixed(2) : '0.00' }}
+        </h2>
+        <span class="kpi-sub">Across all membership tiers</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue Breakdown Visual Bar -->
+  <div class="split-card">
+    <div class="split-header">
+      <h3>Revenue Channel Split</h3>
+      <div class="split-legend">
+        <span class="legend-dot online"></span> Online Card ({{ onlinePercent }}%)
+        <span class="legend-dot cash"></span> Front Desk Cash ({{ cashPercent }}%)
+      </div>
+    </div>
+    <div class="ratio-bar">
+      <div class="ratio-online" [style.width.%]="onlinePercent"></div>
+      <div class="ratio-cash" [style.width.%]="cashPercent"></div>
+    </div>
+  </div>
+
+  <!-- Transactions Table Section -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">
+        <h3>Recent Transactions</h3>
+        <span class="table-count">{{ filteredPayments.length }} payments shown</span>
+      </div>
+
+      <div class="table-filters">
+        <div class="search-input">
+          <span>🔍</span>
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="Search member, email, plan..."
+          />
+        </div>
+
+        <div class="method-toggle">
+          <button
+            type="button"
+            [class.active]="methodFilter === 'ALL'"
+            (click)="methodFilter = 'ALL'"
+          >
+            All
+          </button>
+          <button
+            type="button"
+            [class.active]="methodFilter === 'ONLINE'"
+            (click)="methodFilter = 'ONLINE'"
+          >
+            Online
+          </button>
+          <button
+            type="button"
+            [class.active]="methodFilter === 'CASH'"
+            (click)="methodFilter = 'CASH'"
+          >
+            Cash
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Tx ID</th>
+            <th>Member</th>
+            <th>Membership Plan</th>
+            <th>Method</th>
+            <th>Amount</th>
+            <th>Date & Time</th>
+            <th>Processed By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of filteredPayments">
+            <td>
+              <span class="tx-id">#{{ p.id }}</span>
+            </td>
+            <td>
+              <div class="member-cell">
+                <strong>{{ p.member?.fullName || 'Member' }}</strong>
+                <small>{{ p.member?.email || 'N/A' }}</small>
+              </div>
+            </td>
+            <td>
+              <span class="plan-pill">{{ p.plan || p.planName || 'Gym Subscription' }}</span>
+            </td>
+            <td>
+              <span
+                class="method-badge"
+                [class.online]="p.method === 'ONLINE'"
+                [class.cash]="p.method === 'CASH'"
+              >
+                {{ p.method }}
+              </span>
+            </td>
+            <td>
+              <strong class="amount-val">${{ p.amount.toFixed(2) }}</strong>
+            </td>
+            <td>
+              <div class="date-cell">
+                <span>{{ p.paidAt | date:'mediumDate' }}</span>
+                <small>{{ p.paidAt | date:'shortTime' }}</small>
+              </div>
+            </td>
+            <td>
+              <span class="processed-text">
+                {{ p.processedBy || 'System Gateway' }}
+              </span>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredPayments.length === 0">
+            <td colspan="7" class="empty-cell">
+              No transactions match the selected filter criteria.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

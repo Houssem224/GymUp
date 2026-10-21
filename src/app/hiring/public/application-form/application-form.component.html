@@ -1,0 +1,176 @@
+<div class="apply-container">
+  <!-- Success Screen -->
+  <div class="success-card" *ngIf="applicationSuccess">
+    <div class="celebrate-badge">🎉</div>
+    <h2>Application Received!</h2>
+    <p class="success-message">{{ applicationSuccess.message }}</p>
+
+    <div class="details-box">
+      <div class="detail-row">
+        <span>Application ID:</span>
+        <strong>#APP-{{ applicationSuccess.application.id }}</strong>
+      </div>
+      <div class="detail-row">
+        <span>Candidate:</span>
+        <strong>{{ applicationSuccess.application.fullName }}</strong>
+      </div>
+      <div class="detail-row">
+        <span>Target Role:</span>
+        <strong>{{ applicationSuccess.application.position }}</strong>
+      </div>
+      <div class="detail-row">
+        <span>Current Status:</span>
+        <span class="status-pill">{{ applicationSuccess.application.status }}</span>
+      </div>
+    </div>
+
+    <div class="next-steps">
+      <h4>What Happens Next?</h4>
+      <ul>
+        <li>Our recruitment team will review your qualifications within 48 hours.</li>
+        <li>You will receive an email update with next interview scheduling steps.</li>
+      </ul>
+    </div>
+
+    <div class="actions-row">
+      <a routerLink="/hiring/jobs" class="btn-return">Browse Other Openings</a>
+      <button type="button" class="btn-new" (click)="resetForm()">Submit Another Application</button>
+    </div>
+  </div>
+
+  <!-- Application Form -->
+  <div class="form-wrapper" *ngIf="!applicationSuccess">
+    <div class="form-header">
+      <a routerLink="/hiring/jobs" class="back-link">← Back to Careers</a>
+      <h1>Join the GymUp Team</h1>
+      <p>Submit your candidacy in less than 2 minutes. We review all applications within 48 hours.</p>
+    </div>
+
+    <form class="apply-form" (ngSubmit)="submitApplication()">
+      <!-- Target Position Selection -->
+      <div class="form-group">
+        <label for="positionSelect">Select Position You Are Applying For *</label>
+        <select
+          id="positionSelect"
+          [(ngModel)]="selectedPostingId"
+          name="selectedPostingId"
+          required
+        >
+          <option *ngFor="let p of availablePostings" [value]="p.id">
+            {{ p.positionType === 'COACH' ? '🏋️ Fitness & Strength Coach' : '👋 Front Desk & Receptionist' }}
+            (Posting #{{ p.id }})
+          </option>
+        </select>
+      </div>
+
+      <!-- Personal Info -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fullName">Full Name *</label>
+          <input
+            id="fullName"
+            type="text"
+            [(ngModel)]="fullName"
+            name="fullName"
+            placeholder="e.g. Marcus Vance"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="e.g. marcus.vance@example.com"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            id="phone"
+            type="tel"
+            [(ngModel)]="phone"
+            name="phone"
+            placeholder="+1 (555) 000-0000"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="cvPath">CV Link or Portfolio URL (Optional if uploading file)</label>
+          <input
+            id="cvPath"
+            type="url"
+            [(ngModel)]="cvPath"
+            name="cvPath"
+            placeholder="https://linkedin.com/in/yourprofile or Google Drive link"
+          />
+        </div>
+      </div>
+
+      <!-- CV File Upload Drag & Drop Area -->
+      <div class="form-group">
+        <label>Upload Your CV / Resume (PDF, DOCX)</label>
+        <div class="drop-zone">
+          <input
+            type="file"
+            id="fileInput"
+            (change)="onFileSelected($event)"
+            accept=".pdf,.doc,.docx"
+          />
+          <div class="drop-content">
+            <span class="upload-icon">📄</span>
+            <strong *ngIf="!selectedFileName">Click to upload or drag & drop resume</strong>
+            <strong *ngIf="selectedFileName" class="file-chosen">
+              Selected: {{ selectedFileName }}
+            </strong>
+            <small>Max file size: 10MB (PDF preferred)</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Short Cover Note -->
+      <div class="form-group">
+        <label for="coverNote">Why do you want to join GymUp? (Optional)</label>
+        <textarea
+          id="coverNote"
+          rows="3"
+          [(ngModel)]="coverNote"
+          name="coverNote"
+          placeholder="Tell us briefly about your certifications, fitness philosophy, or hospitality experience..."
+        ></textarea>
+      </div>
+
+      <div class="checkbox-row">
+        <label class="custom-checkbox">
+          <input
+            type="checkbox"
+            [(ngModel)]="agreeTerms"
+            name="agreeTerms"
+            required
+          />
+          <span>I consent to GymUp processing my application information for hiring purposes.</span>
+        </label>
+      </div>
+
+      <div class="error-box" *ngIf="errorMessage">
+        ⚠️ {{ errorMessage }}
+      </div>
+
+      <button
+        type="submit"
+        class="btn-submit-app"
+        [disabled]="isSubmitting || !fullName || !email"
+      >
+        <span *ngIf="!isSubmitting">Submit Application →</span>
+        <span *ngIf="isSubmitting">Submitting your application...</span>
+      </button>
+    </form>
+  </div>
+</div>

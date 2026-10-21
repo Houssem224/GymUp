@@ -1,0 +1,175 @@
+<div class="review-page">
+  <div class="page-header">
+    <div class="header-left">
+      <span class="admin-badge">APPLICANT TRACKING SYSTEM (ATS)</span>
+      <h1>Candidate Application Review</h1>
+      <p>Evaluate submissions, review candidate CVs, and onboard new gym staff with one click.</p>
+    </div>
+
+    <div class="header-right">
+      <a routerLink="/hiring/admin/postings" class="btn-postings">
+        ← Manage Job Postings
+      </a>
+    </div>
+  </div>
+
+  <div class="action-alert" *ngIf="actionSuccessMessage">
+    {{ actionSuccessMessage }}
+  </div>
+
+  <!-- Review Dashboard & Filter Bar -->
+  <div class="review-toolbar">
+    <div class="status-tabs">
+      <button
+        type="button"
+        [class.active]="selectedStatus === 'ALL'"
+        (click)="selectedStatus = 'ALL'"
+      >
+        All Submissions ({{ applications.length }})
+      </button>
+
+      <button
+        type="button"
+        class="pending"
+        [class.active]="selectedStatus === 'PENDING'"
+        (click)="selectedStatus = 'PENDING'"
+      >
+        Pending Review ({{ pendingCount }})
+      </button>
+
+      <button
+        type="button"
+        class="accepted"
+        [class.active]="selectedStatus === 'ACCEPTED'"
+        (click)="selectedStatus = 'ACCEPTED'"
+      >
+        Accepted Staff ({{ acceptedCount }})
+      </button>
+
+      <button
+        type="button"
+        class="rejected"
+        [class.active]="selectedStatus === 'REJECTED'"
+        (click)="selectedStatus = 'REJECTED'"
+      >
+        Rejected ({{ rejectedCount }})
+      </button>
+    </div>
+
+    <div class="search-box">
+      <span>🔍</span>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Filter by applicant name or email..."
+      />
+    </div>
+  </div>
+
+  <!-- Candidate Applications Table -->
+  <div class="applications-card">
+    <div class="table-responsive">
+      <table class="ats-table">
+        <thead>
+          <tr>
+            <th>Candidate</th>
+            <th>Target Role</th>
+            <th>CV / Credentials</th>
+            <th>Submission Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of filteredApplications">
+            <td>
+              <div class="candidate-cell">
+                <div class="avatar">{{ app.fullName[0] }}</div>
+                <div>
+                  <strong>{{ app.fullName }}</strong>
+                  <small>{{ app.email }}</small>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <span
+                class="role-pill"
+                [class.coach]="app.positionType === 'COACH'"
+                [class.reception]="app.positionType === 'RECEPTIONIST'"
+              >
+                {{ app.positionType === 'COACH' ? '🏋️ Fitness Coach' : '👋 Receptionist' }}
+              </span>
+            </td>
+
+            <td>
+              <a
+                [href]="app.cvPath"
+                target="_blank"
+                class="cv-link"
+              >
+                📄 View Resume / CV
+              </a>
+            </td>
+
+            <td>
+              <div class="date-cell">
+                <span>{{ app.submittedAt | date:'mediumDate' }}</span>
+                <small>{{ app.submittedAt | date:'shortTime' }}</small>
+              </div>
+            </td>
+
+            <td>
+              <span
+                class="status-badge"
+                [class.pending]="app.status === 'PENDING'"
+                [class.accepted]="app.status === 'ACCEPTED'"
+                [class.rejected]="app.status === 'REJECTED'"
+              >
+                {{ app.status }}
+              </span>
+            </td>
+
+            <td>
+              <div class="actions-group">
+                <button
+                  *ngIf="app.status === 'PENDING'"
+                  type="button"
+                  class="btn-accept"
+                  [disabled]="processingAppId === app.id"
+                  (click)="accept(app)"
+                >
+                  ✓ Accept & Hire
+                </button>
+
+                <button
+                  *ngIf="app.status === 'PENDING'"
+                  type="button"
+                  class="btn-reject"
+                  [disabled]="processingAppId === app.id"
+                  (click)="reject(app)"
+                >
+                  ✕ Decline
+                </button>
+
+                <span *ngIf="app.status === 'ACCEPTED'" class="hire-confirmed">
+                  🎉 Staff Onboarded
+                </span>
+
+                <span *ngIf="app.status === 'REJECTED'" class="declined-text">
+                  Archived
+                </span>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredApplications.length === 0">
+            <td colspan="6" class="empty-cell">
+              No applications found for this filter.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

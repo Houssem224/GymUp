@@ -1,0 +1,208 @@
+<div class="cash-payment-page">
+  <div class="page-header">
+    <div class="header-left">
+      <span class="staff-pill">FRONT DESK POS</span>
+      <h1>Cash Register & Membership Payment</h1>
+      <p>Process walk-in payments and activate memberships on the spot.</p>
+    </div>
+    <div class="header-right">
+      <div class="register-status">
+        <span class="status-dot"></span>
+        <span>Register Active: Till #1</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pos-grid">
+    <!-- Main Payment Processing Column -->
+    <div class="pos-main">
+      <!-- Member Search Bar -->
+      <div class="search-card">
+        <h3>Member Lookup</h3>
+        <div class="search-row">
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            placeholder="Search member name, ID (#14), or email..."
+          />
+          <button type="button" class="btn-search">Search</button>
+        </div>
+
+        <div class="quick-tags">
+          <span>Recent Walk-ins:</span>
+          <button type="button" class="tag-btn" (click)="quickSelectPreset(14)">
+            David Miller (#14)
+          </button>
+          <button type="button" class="tag-btn" (click)="quickSelectPreset(22)">
+            Elena Rostova (#22)
+          </button>
+        </div>
+      </div>
+
+      <!-- Member Profile & Pending Subscription -->
+      <div class="member-detail-card" *ngIf="selectedMember">
+        <div class="member-head">
+          <div class="member-avatar">
+            {{ selectedMember.fullName[0] }}
+          </div>
+          <div class="member-meta">
+            <h4>{{ selectedMember.fullName }}</h4>
+            <p>{{ selectedMember.email }} • {{ selectedMember.phone }}</p>
+          </div>
+          <span class="badge-pending">Pending Payment</span>
+        </div>
+
+        <div class="subscription-item" *ngIf="selectedMember.pendingSubscription">
+          <div class="sub-info">
+            <span class="sub-label">Plan to Activate:</span>
+            <strong>{{ selectedMember.pendingSubscription.planName }}</strong>
+            <small>Subscription ID: #{{ selectedMember.pendingSubscription.id }}</small>
+          </div>
+          <div class="sub-amount">
+            <span class="due-label">Price Due</span>
+            <span class="due-value">${{ expectedAmount.toFixed(2) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cash Calculation & Entry Form -->
+      <div class="calc-card" *ngIf="selectedMember">
+        <h3>Cash Tender Details</h3>
+
+        <div class="calc-grid">
+          <div class="calc-box">
+            <label>Amount Due</label>
+            <div class="val-display">${{ expectedAmount.toFixed(2) }}</div>
+          </div>
+
+          <div class="calc-box">
+            <label>Cash Received</label>
+            <div class="input-money">
+              <span class="dollar-sign">$</span>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                [(ngModel)]="cashReceived"
+              />
+            </div>
+          </div>
+
+          <div class="calc-box highlight" [class.negative]="isUnderpaid">
+            <label>{{ isUnderpaid ? 'Shortage' : 'Change to Return' }}</label>
+            <div class="val-display">
+              ${{ isUnderpaid ? (expectedAmount - cashReceived).toFixed(2) : changeDue.toFixed(2) }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Cash Denomination Buttons -->
+        <div class="quick-cash-row">
+          <span>Quick Exact:</span>
+          <button type="button" (click)="cashReceived = expectedAmount">
+            Exact (${{ expectedAmount.toFixed(2) }})
+          </button>
+          <button type="button" (click)="cashReceived = 50">$50</button>
+          <button type="button" (click)="cashReceived = 60">$60</button>
+          <button type="button" (click)="cashReceived = 100">$100</button>
+          <button type="button" (click)="cashReceived = 500">$500</button>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-banner">
+          {{ errorMessage }}
+        </div>
+
+        <button
+          type="button"
+          class="btn-confirm-cash"
+          [disabled]="isProcessing || isUnderpaid"
+          (click)="recordCash()"
+        >
+          <span *ngIf="!isProcessing">
+            ✓ Record ${{ cashReceived.toFixed(2) }} Cash & Activate Membership
+          </span>
+          <span *ngIf="isProcessing">Recording Cash Payment...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: Today's Front-Desk Receipts -->
+    <div class="pos-sidebar">
+      <div class="receipts-card">
+        <h3>Today's Cash Receipts</h3>
+        <p class="summary-subtitle">Processed by current shift</p>
+
+        <div class="receipts-list">
+          <div class="receipt-item" *ngFor="let rec of todayReceipts">
+            <div class="rec-info">
+              <strong>{{ rec.member }}</strong>
+              <small>{{ rec.plan }} • {{ rec.time }}</small>
+            </div>
+            <div class="rec-amount">
+              +${{ rec.amount.toFixed(2) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="shift-total">
+          <span>Shift Cash Total:</span>
+          <strong>$304.00</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal & Receipt Print -->
+  <div class="modal-backdrop" *ngIf="paymentSuccess">
+    <div class="modal-box">
+      <div class="icon-check">✓</div>
+      <h2>Payment Recorded!</h2>
+      <p>{{ paymentSuccess.message }}</p>
+
+      <div class="paper-receipt">
+        <div class="gym-brand">GYMUP FITNESS CLUB</div>
+        <div class="receipt-divider">================================</div>
+        <div class="receipt-line">
+          <span>Receipt #:</span>
+          <span>#CASH-{{ paymentSuccess.payment.id }}</span>
+        </div>
+        <div class="receipt-line">
+          <span>Member:</span>
+          <span>{{ selectedMember?.fullName }}</span>
+        </div>
+        <div class="receipt-line">
+          <span>Plan:</span>
+          <span>{{ paymentSuccess.subscription.plan }}</span>
+        </div>
+        <div class="receipt-line">
+          <span>Status:</span>
+          <span>ACTIVE</span>
+        </div>
+        <div class="receipt-line">
+          <span>Valid Until:</span>
+          <span>{{ paymentSuccess.subscription.endDate }}</span>
+        </div>
+        <div class="receipt-divider">--------------------------------</div>
+        <div class="receipt-line bold">
+          <span>Cash Tendered:</span>
+          <span>${{ cashReceived.toFixed(2) }}</span>
+        </div>
+        <div class="receipt-line bold">
+          <span>Plan Fee:</span>
+          <span>${{ paymentSuccess.payment.amount.toFixed(2) }}</span>
+        </div>
+        <div class="receipt-line bold">
+          <span>Change Returned:</span>
+          <span>${{ changeDue.toFixed(2) }}</span>
+        </div>
+        <div class="receipt-divider">================================</div>
+        <small class="receipt-foot">Processed by staff: {{ paymentSuccess.payment.processedBy }}</small>
+      </div>
+
+      <div class="modal-btns">
+        <button type="button" class="btn-print">🖨️ Print Receipt</button>
+        <button type="button" class="btn-done" (click)="resetForm()">New Transaction</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="schedule-page">
+  <div class="page-header">
+    <span class="badge">CONSISTENCY ENGINE</span>
+    <h1>My Weekly Attendance Commitment</h1>
+    <p>
+      Select the days of the week you commit to working out. Showing up on scheduled days builds
+      your streak, while unscheduled days count as bonus workouts!
+    </p>
+  </div>
+
+  <div class="schedule-card">
+    <div class="commitment-bar">
+      <div class="bar-info">
+        <h3>{{ selectedCount }} Days / Week</h3>
+        <span class="commitment-tier">{{ targetCommitment }}</span>
+      </div>
+      <div class="meter">
+        <div class="fill" [style.width.%]="(selectedCount / 7) * 100"></div>
+      </div>
+    </div>
+
+    <!-- Day Buttons Grid -->
+    <div class="days-selector-grid">
+      <button
+        type="button"
+        class="day-btn"
+        *ngFor="let d of days"
+        [class.selected]="d.selected"
+        (click)="toggleDay(d)"
+      >
+        <span class="day-check" *ngIf="d.selected">✓</span>
+        <span class="day-short">{{ d.short }}</span>
+        <span class="day-full">{{ d.label }}</span>
+      </button>
+    </div>
+
+    <!-- Feedback messages -->
+    <div class="success-banner" *ngIf="successMessage">
+      ✓ {{ successMessage }}
+    </div>
+
+    <div class="error-banner" *ngIf="errorMessage">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <div class="save-row">
+      <button
+        type="button"
+        class="btn-save"
+        [disabled]="isSaving"
+        (click)="saveSchedule()"
+      >
+        <span *ngIf="!isSaving">Save Workout Schedule</span>
+        <span *ngIf="isSaving">Saving your commitment...</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Streak Rules Explainer Card -->
+  <div class="rules-card">
+    <h3>🔥 How GymUp Streak Calculation Works</h3>
+    <div class="rules-grid">
+      <div class="rule-box">
+        <span class="rule-icon">✅</span>
+        <h4>Scheduled Day Scan</h4>
+        <p>Show up on a scheduled day and scan your QR code. Your streak increments by 1 day!</p>
+      </div>
+
+      <div class="rule-box">
+        <span class="rule-icon">🌟</span>
+        <h4>Bonus Workout Day</h4>
+        <p>Visit the gym on a day not on your schedule. You stay active without resetting or penalizing your streak.</p>
+      </div>
+
+      <div class="rule-box">
+        <span class="rule-icon">⚠️</span>
+        <h4>Missed Scheduled Day</h4>
+        <p>If a scheduled day passes with no check-in, the streak resets to 0 upon your next visit.</p>
+      </div>
+    </div>
+  </div>
+</div>

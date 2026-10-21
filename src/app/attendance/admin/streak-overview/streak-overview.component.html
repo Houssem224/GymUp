@@ -1,0 +1,164 @@
+<div class="streak-overview-page">
+  <div class="page-header">
+    <div class="header-left">
+      <span class="admin-badge">MEMBER RETENTION & ENGAGEMENT</span>
+      <h1>Member Streaks & Attendance Leaderboard</h1>
+      <p>Monitor member consistency, recognize top athletes, and intervene before streaks are broken.</p>
+    </div>
+  </div>
+
+  <div class="toast-banner" *ngIf="nudgeNotification">
+    ✓ {{ nudgeNotification }}
+  </div>
+
+  <!-- Key Metrics Row -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <span class="m-icon">👑</span>
+      <div class="m-info">
+        <span class="m-title">Highest Active Streak</span>
+        <h2>{{ leaderboard.length > 0 ? leaderboard[0].streak : 0 }} Days</h2>
+        <small>{{ leaderboard.length > 0 ? leaderboard[0].memberName : 'N/A' }}</small>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <span class="m-icon">⚡</span>
+      <div class="m-info">
+        <span class="m-title">Top 10 Average Streak</span>
+        <h2>{{ averageTopStreak }} Days</h2>
+        <small>High consistency cohort</small>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <span class="m-icon">🛡️</span>
+      <div class="m-info">
+        <span class="m-title">Gym Retention Boost</span>
+        <h2>+44%</h2>
+        <small>Streak users renew 3x more</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top 3 Podium Display -->
+  <div class="podium-section" *ngIf="leaderboard.length >= 3">
+    <!-- Rank 2: Silver -->
+    <div class="podium-card rank-2">
+      <div class="podium-medal">🥈</div>
+      <span class="rank-tag">#2 ATHLETE</span>
+      <h4>{{ leaderboard[1].memberName }}</h4>
+      <div class="podium-streak">
+        <span class="fire">🔥</span>
+        <strong>{{ leaderboard[1].streak }}</strong> Days
+      </div>
+      <small class="podium-badge">{{ leaderboard[1].badge || 'Beast Mode' }}</small>
+    </div>
+
+    <!-- Rank 1: Gold -->
+    <div class="podium-card rank-1">
+      <div class="crown-badge">👑</div>
+      <div class="podium-medal">🥇</div>
+      <span class="rank-tag gold">#1 CHAMPION</span>
+      <h4>{{ leaderboard[0].memberName }}</h4>
+      <div class="podium-streak">
+        <span class="fire">🔥</span>
+        <strong>{{ leaderboard[0].streak }}</strong> Days
+      </div>
+      <small class="podium-badge gold">{{ leaderboard[0].badge || 'Iron Gym Legend' }}</small>
+    </div>
+
+    <!-- Rank 3: Bronze -->
+    <div class="podium-card rank-3">
+      <div class="podium-medal">🥉</div>
+      <span class="rank-tag">#3 ATHLETE</span>
+      <h4>{{ leaderboard[2].memberName }}</h4>
+      <div class="podium-streak">
+        <span class="fire">🔥</span>
+        <strong>{{ leaderboard[2].streak }}</strong> Days
+      </div>
+      <small class="podium-badge">{{ leaderboard[2].badge || 'Unstoppable' }}</small>
+    </div>
+  </div>
+
+  <!-- Leaderboard Table Card -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="title-area">
+        <h3>All Ranked Members</h3>
+        <span class="count">{{ filteredLeaderboard.length }} athletes tracked</span>
+      </div>
+
+      <div class="search-field">
+        <span>🔍</span>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Search athlete name..."
+        />
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Athlete Name</th>
+            <th>Consecutive Streak</th>
+            <th>Honor Badge</th>
+            <th>Last Visit Verified</th>
+            <th>Engagement Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredLeaderboard; let idx = index">
+            <td>
+              <span class="rank-badge" [class.top3]="idx < 3">
+                #{{ idx + 1 }}
+              </span>
+            </td>
+            <td>
+              <div class="athlete-cell">
+                <div class="avatar">{{ item.memberName[0] }}</div>
+                <div>
+                  <strong>{{ item.memberName }}</strong>
+                  <small>Member ID #{{ item.memberId }}</small>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="streak-pill">
+                <span class="flame">🔥</span>
+                <strong>{{ item.streak }}</strong> Days
+              </div>
+            </td>
+            <td>
+              <span class="honor-tag">{{ item.badge || 'Active Member' }}</span>
+            </td>
+            <td>
+              <span class="visit-date">
+                {{ item.lastSuccessDate ? (item.lastSuccessDate | date:'mediumDate') : 'Today' }}
+              </span>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn-nudge"
+                (click)="sendNudge(item)"
+              >
+                🔔 Send Encouragement
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredLeaderboard.length === 0 && !isLoading">
+            <td colspan="6" class="empty-cell">
+              No athletes found matching this search.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

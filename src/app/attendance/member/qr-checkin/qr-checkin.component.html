@@ -1,0 +1,91 @@
+<div class="checkin-container">
+  <div class="checkin-header">
+    <span class="badge">ATTENDANCE SCANNER</span>
+    <h1>Gym Attendance Check-In</h1>
+    <p>Point your device camera at the QR code displayed at the entrance turnstile or front desk.</p>
+  </div>
+
+  <div class="scanner-card">
+    <!-- Camera Scanner Viewport -->
+    <div class="scanner-viewport" [class.scanning]="isScanning">
+      <div class="corner top-left"></div>
+      <div class="corner top-right"></div>
+      <div class="corner bottom-left"></div>
+      <div class="corner bottom-right"></div>
+
+      <!-- Laser Scan Animation -->
+      <div class="laser-beam" *ngIf="isScanning"></div>
+
+      <div class="qr-target">
+        <div class="qr-sample">
+          <div class="qr-block top-left-box"></div>
+          <div class="qr-block top-right-box"></div>
+          <div class="qr-block bottom-left-box"></div>
+          <span class="qr-center-icon">🏋️</span>
+        </div>
+        <span class="scanner-hint" *ngIf="!isScanning">
+          Align QR Code within the frame
+        </span>
+        <span class="scanner-hint active" *ngIf="isScanning">
+          Verifying Member Pass & Streak...
+        </span>
+      </div>
+    </div>
+
+    <!-- Error message if any -->
+    <div class="error-banner" *ngIf="errorMessage">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <!-- Scan Trigger Button -->
+    <div class="actions-wrapper">
+      <button
+        type="button"
+        class="btn-scan"
+        [disabled]="isScanning"
+        (click)="triggerScan()"
+      >
+        <span *ngIf="!isScanning">📷 Tap to Scan Gym QR Code</span>
+        <span *ngIf="isScanning">Scanning...</span>
+      </button>
+
+      <div class="quick-links">
+        <a routerLink="/attendance/schedule">Edit Weekly Schedule</a>
+        <span>•</span>
+        <a routerLink="/attendance/my-streak">View My Streak Stats</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scan Result Modal -->
+  <div class="result-backdrop" *ngIf="scanResult">
+    <div class="result-modal">
+      <div
+        class="result-badge-icon"
+        [class.increment]="scanResult.data.streakIncremented"
+        [class.broken]="scanResult.data.streakBroken"
+      >
+        {{ scanResult.data.streakIncremented ? '🔥' : (scanResult.data.streakBroken ? '⚠️' : '💪') }}
+      </div>
+
+      <h2>{{ scanResult.data.streakIncremented ? 'Streak Level Up!' : 'Check-In Confirmed!' }}</h2>
+      <p class="result-msg">{{ scanResult.message }}</p>
+
+      <div class="streak-card">
+        <span class="streak-label">Current Active Streak</span>
+        <div class="streak-counter">
+          <span class="fire-icon">🔥</span>
+          <span class="streak-number">{{ scanResult.data.currentStreak }}</span>
+          <span class="streak-unit">Days</span>
+        </div>
+        <small class="scan-time">
+          Verified at {{ scanResult.data.scannedAt | date:'mediumTime' }}
+        </small>
+      </div>
+
+      <button type="button" class="btn-enjoy" (click)="dismissResult()">
+        Enjoy Your Workout! 💪
+      </button>
+    </div>
+  </div>
+</div>

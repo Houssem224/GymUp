@@ -1,0 +1,111 @@
+<div class="hiring-portal">
+  <!-- Hero Section -->
+  <div class="careers-hero">
+    <div class="hero-badge">CAREERS AT GYMUP</div>
+    <h1>Build The Future Of High-Performance Fitness</h1>
+    <p>
+      Join our elite team of coaches, trainers, and hospitality specialists.
+      Empower hundreds of members every week in a state-of-the-art gym environment.
+    </p>
+
+    <!-- Filter Pills -->
+    <div class="filter-pills">
+      <button
+        type="button"
+        [class.active]="selectedFilter === 'ALL'"
+        (click)="selectedFilter = 'ALL'"
+      >
+        All Opportunities
+      </button>
+      <button
+        type="button"
+        [class.active]="selectedFilter === 'COACH'"
+        (click)="selectedFilter = 'COACH'"
+      >
+        🏋️ Fitness Coaches
+      </button>
+      <button
+        type="button"
+        [class.active]="selectedFilter === 'RECEPTIONIST'"
+        (click)="selectedFilter = 'RECEPTIONIST'"
+      >
+        👋 Front Desk & Reception
+      </button>
+    </div>
+  </div>
+
+  <!-- Job Listings Grid -->
+  <div class="postings-container">
+    <div class="postings-header">
+      <h2>Open Positions ({{ filteredJobs.length }})</h2>
+      <span class="posting-sub">Full-time and flexible shift opportunities</span>
+    </div>
+
+    <div class="jobs-grid">
+      <div class="job-card" *ngFor="let job of filteredJobs">
+        <div class="job-card-header">
+          <div class="job-meta">
+            <span
+              class="role-pill"
+              [class.coach]="job.positionType === 'COACH'"
+              [class.reception]="job.positionType === 'RECEPTIONIST'"
+            >
+              {{ job.positionType === 'COACH' ? 'Fitness & Coaching' : 'Member Services & Desk' }}
+            </span>
+            <span class="open-date">
+              Posted {{ job.openedAt | date:'mediumDate' }}
+            </span>
+          </div>
+          <span class="status-live">● Open Now</span>
+        </div>
+
+        <h3 class="job-title">
+          {{ job.title || (job.positionType === 'COACH' ? 'Lead Strength & Conditioning Coach' : 'Member Experience Representative') }}
+        </h3>
+
+        <p class="job-desc">
+          {{ job.description || 'Join our vibrant gym community to guide members towards their fitness goals with energy, precision, and passion.' }}
+        </p>
+
+        <div class="job-perks" *ngIf="job.perks && job.perks.length > 0">
+          <h4>Key Benefits:</h4>
+          <ul>
+            <li *ngFor="let perk of job.perks">
+              <span class="sparkle">★</span> {{ perk }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-footer">
+          <button type="button" class="btn-apply" (click)="applyFor(job)">
+            Apply For This Position →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredJobs.length === 0 && !isLoading">
+      <p>No open positions match this category right now. Check back soon!</p>
+    </div>
+  </div>
+
+  <!-- Why Work at GymUp Banner -->
+  <div class="culture-banner">
+    <div class="culture-box">
+      <span class="culture-icon">⚡</span>
+      <h4>Pro Equipment</h4>
+      <p>Train with industry-leading Hammer Strength & Eleiko equipment.</p>
+    </div>
+    <div class="culture-box">
+      <span class="culture-icon">📈</span>
+      <h4>Continuous Growth</h4>
+      <p>Internal promotion pathways and paid health certifications.</p>
+    </div>
+    <div class="culture-box">
+      <span class="culture-icon">🤝</span>
+      <h4>Empowered Culture</h4>
+      <p>Supportive community dedicated to wellness and member success.</p>
+    </div>
+  </div>
+</div>

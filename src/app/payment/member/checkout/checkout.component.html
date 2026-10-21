@@ -1,0 +1,245 @@
+<div class="checkout-page">
+  <div class="page-header">
+    <div class="header-content">
+      <span class="badge">SECURE PAYMENT</span>
+      <h1>Complete Your GymUp Membership</h1>
+      <p>Activate your membership instantly with 256-bit encrypted checkout.</p>
+    </div>
+  </div>
+
+  <div class="checkout-grid">
+    <!-- Payment Information Column -->
+    <div class="payment-form-card">
+      <div class="card-section">
+        <h2 class="section-title">Select Payment Method</h2>
+        <div class="method-selector">
+          <button
+            type="button"
+            class="method-btn"
+            [class.active]="selectedMethod === 'card'"
+            (click)="selectedMethod = 'card'"
+          >
+            <span class="method-icon">💳</span>
+            <div class="method-info">
+              <strong>Credit / Debit Card</strong>
+              <small>Visa, Mastercard, Amex</small>
+            </div>
+            <span class="radio-indicator"></span>
+          </button>
+
+          <button
+            type="button"
+            class="method-btn"
+            [class.active]="selectedMethod === 'apple-pay'"
+            (click)="selectedMethod = 'apple-pay'"
+          >
+            <span class="method-icon">🍏</span>
+            <div class="method-info">
+              <strong>Apple Pay</strong>
+              <small>Instant Biometric Checkout</small>
+            </div>
+            <span class="radio-indicator"></span>
+          </button>
+
+          <button
+            type="button"
+            class="method-btn"
+            [class.active]="selectedMethod === 'google-pay'"
+            (click)="selectedMethod = 'google-pay'"
+          >
+            <span class="method-icon">⚡</span>
+            <div class="method-info">
+              <strong>Google Pay</strong>
+              <small>Quick & Seamless</small>
+            </div>
+            <span class="radio-indicator"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Card Details Form -->
+      <form class="card-form" (ngSubmit)="submitPayment()">
+        <div class="form-group">
+          <label for="cardHolder">Cardholder Name</label>
+          <input
+            id="cardHolder"
+            type="text"
+            [(ngModel)]="cardHolder"
+            name="cardHolder"
+            placeholder="e.g. Alex Morgan"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="cardNumber">Card Number</label>
+          <div class="input-with-icon">
+            <input
+              id="cardNumber"
+              type="text"
+              [(ngModel)]="cardNumber"
+              name="cardNumber"
+              placeholder="1234 5678 9012 3456"
+              required
+            />
+            <span class="card-brand-badge">VISA</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="expiry">Expires</label>
+            <input
+              id="expiry"
+              type="text"
+              [(ngModel)]="expiry"
+              name="expiry"
+              placeholder="MM/YY"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="cvv">Security Code (CVC)</label>
+            <input
+              id="cvv"
+              type="password"
+              maxlength="4"
+              [(ngModel)]="cvv"
+              name="cvv"
+              placeholder="123"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="zip">Billing ZIP</label>
+            <input
+              id="zip"
+              type="text"
+              [(ngModel)]="billingZip"
+              name="billingZip"
+              placeholder="90210"
+            />
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-banner">
+          <span class="alert-icon">⚠️</span>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <button
+          type="submit"
+          class="btn-pay"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">Pay ${{ total }} & Activate Plan</span>
+          <span *ngIf="isLoading" class="spinner-container">
+            <span class="spinner"></span> Processing payment...
+          </span>
+        </button>
+
+        <div class="security-guarantee">
+          <span class="shield-icon">🔒</span>
+          <span>End-to-end encrypted • Cancel subscription anytime in settings</span>
+        </div>
+      </form>
+    </div>
+
+    <!-- Order Summary Column -->
+    <div class="order-summary-column">
+      <div class="summary-card">
+        <h3 class="summary-title">Plan Summary</h3>
+        
+        <div class="plan-hero">
+          <div class="plan-header">
+            <h4>{{ selectedPlan.name }}</h4>
+            <span class="plan-tag">30 Days</span>
+          </div>
+          <div class="plan-price">
+            <span class="currency">$</span>
+            <span class="amount">{{ selectedPlan.price }}</span>
+            <span class="frequency">/month</span>
+          </div>
+        </div>
+
+        <ul class="plan-features">
+          <li *ngFor="let feat of selectedPlan.features">
+            <span class="check-icon">✓</span>
+            <span>{{ feat }}</span>
+          </li>
+        </ul>
+
+        <div class="divider"></div>
+
+        <div class="price-breakdown">
+          <div class="breakdown-row">
+            <span>Membership Subtotal</span>
+            <span>${{ subtotal.toFixed(2) }}</span>
+          </div>
+          <div class="breakdown-row">
+            <span>Estimated Tax (8%)</span>
+            <span>${{ tax.toFixed(2) }}</span>
+          </div>
+          <div class="divider"></div>
+          <div class="breakdown-row total-row">
+            <span>Total Due Today</span>
+            <span class="total-amount">${{ total.toFixed(2) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment History Quick View -->
+      <div class="history-card" *ngIf="history.length > 0">
+        <h4>Recent Payments</h4>
+        <div class="history-list">
+          <div class="history-item" *ngFor="let item of history">
+            <div class="history-details">
+              <strong>{{ item.planName || 'Membership' }}</strong>
+              <small>{{ item.paidAt | date:'mediumDate' }}</small>
+            </div>
+            <div class="history-meta">
+              <span class="history-amount">${{ item.amount.toFixed(2) }}</span>
+              <span class="history-badge" [class.cash]="item.method === 'CASH'">
+                {{ item.method }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Confirmation Modal -->
+  <div class="modal-backdrop" *ngIf="checkoutSuccess">
+    <div class="modal-box">
+      <div class="modal-celebrate-icon">🎉</div>
+      <h2>Payment Confirmed!</h2>
+      <p class="modal-msg">{{ checkoutSuccess.message }}</p>
+
+      <div class="receipt-card">
+        <div class="receipt-row">
+          <span>Transaction ID</span>
+          <strong>#PAY-{{ checkoutSuccess.payment.id }}</strong>
+        </div>
+        <div class="receipt-row">
+          <span>Plan</span>
+          <strong>{{ checkoutSuccess.subscription.plan }}</strong>
+        </div>
+        <div class="receipt-row">
+          <span>Amount Paid</span>
+          <strong class="receipt-price">${{ checkoutSuccess.payment.amount.toFixed(2) }}</strong>
+        </div>
+        <div class="receipt-row">
+          <span>Active Period</span>
+          <strong>{{ checkoutSuccess.subscription.startDate }} → {{ checkoutSuccess.subscription.endDate }}</strong>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-primary" (click)="closeSuccessModal()">
+          Go to My Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
